@@ -1,0 +1,87 @@
+1.0 ## Main Script
+
+Open MATLAB and run:
+
+```matlab
+cd('D:\\Rahul\\Metasurface\\For Tian\\20260520\_MetasurfaceApp')
+RunLibraryPipeline
+```
+
+
+2. Run a tiny test first:
+
+```matlab
+pitches = 4.0;
+num\_p1 = 2;
+num\_p2 = 1;
+angles = 0;
+nn = \[6, 6];
+
+## Output
+
+Results are written under:
+
+```text
+For Tian/Library Data2/<pillar>\_on\_<substrate>\_<shape>/<timestamp>/
+```
+
+Inside each run:
+
+```text
+TE/
+TM/
+Averaged/
+```
+
+The most useful final files are in `Averaged/`:
+
+```text
+TransmissionTable\_<shape>\_theta0.csv
+TransmissionTable\_<shape>\_theta10.csv
+TransmissionTable\_<shape>\_theta20.csv
+```
+
+These are TE/TM-averaged filter tables.
+
+3. # Viewing Results
+
+Open the GUI:
+
+```matlab
+cd('D:\\Rahul\\Metasurface\\For Tian\\20260520\_MetasurfaceApp')
+MetasurfaceExplorer
+```
+
+Use the library viewer to select the run folder, not the `TE` or `TM` subfolder.
+For example, select:
+
+```text
+For Tian/Library Data2/Si\_on\_SiO2\_circle\_with\_cap/2026-06-04\_120000
+```
+
+The viewer can show TE, TM, and averaged spectra where available.
+
+## LWIR Checks Before Large Runs
+
+1. Confirm the material file covers the entire wavelength range.
+2. Check grating orders for the largest pitch:
+
+```matlab
+wavelength = linspace(8, 14, 200);
+check\_grating\_orders(max(pitches), wavelength, n\_substrate, n\_background, max(angles));
+```
+
+## Common Issues
+
+* `Material file not found`
+Create the `Material Dielectric Function` folder and put
+`Si\_LWIR\_8to14.xlsx` inside it, or edit `material\_file`.
+* `Requested wavelength range ... outside the material file range`
+The `wl` column does not span 8-14 um, or the units are not micrometers.
+* No output appears in `Averaged`
+Check that both TE and TM finished. Averaging needs matching TE/TM files.
+* Very slow run
+Reduce `nn`, `num\_p1`, `num\_p2`, number of pitches, or number of wavelengths
+for testing. Use higher `nn` only after convergence checks.
+
+
